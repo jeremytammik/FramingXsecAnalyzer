@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command FramingXsecAnalyzer</Text>
+    <Description>Some description for FramingXsecAnalyzer</Description>
+    <Assembly>FramingXsecAnalyzer.dll</Assembly>
+    <FullClassName>FramingXsecAnalyzer.Command</FullClassName>
+    <ClientId>42cec1ae-2a0d-4ed2-b524-c89d9bde5fc1</ClientId>
+    <VendorId>TBC_</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
