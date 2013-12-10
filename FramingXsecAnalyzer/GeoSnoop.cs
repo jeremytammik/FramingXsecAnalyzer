@@ -92,7 +92,7 @@ namespace FramingXsecAnalyzer
 
         foreach( Edge e in ea )
         {
-          XYZ p = e.AsCurve().get_EndPoint( 0 );
+          XYZ p = e.AsCurve().GetEndPoint( 0 );
           loop[i] = GetPointF( p, dropCoordinate );
           if( null == p0 ) { p0 = p; }
           ++i;

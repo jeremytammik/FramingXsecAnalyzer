@@ -260,7 +260,7 @@ namespace FramingXsecAnalyzer
             "Please pick a framing element "
             + "for cross section analysis." );
 
-          e = doc.get_Element( r.ElementId );
+          e = doc.GetElement( r.ElementId );
         }
         catch( RvtOperationCanceledException )
         {
@@ -308,10 +308,10 @@ namespace FramingXsecAnalyzer
       //opt.View = viewSection;
 
       GeometryElement geo = e.get_Geometry( opt );
-      GeometryObjectArray objects = geo.Objects;
+      //GeometryObjectArray objects = geo.Objects;
       GeometryInstance inst = null;
 
-      foreach( GeometryObject obj in objects )
+      foreach( GeometryObject obj in geo )
       {
         inst = obj as GeometryInstance;
         if( null != inst )
@@ -332,9 +332,9 @@ namespace FramingXsecAnalyzer
       //geo = inst.SymbolGeometry;
       geo = inst.GetInstanceGeometry();
 
-      objects = geo.Objects;
+      //objects = geo.Objects;
       
-      foreach( GeometryObject obj in objects )
+      foreach( GeometryObject obj in geo )
       {
         solid = obj as Solid;
 

@@ -5,7 +5,6 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 #endregion
 
-
 namespace FramingXsecAnalyzer
 {
   class Util
