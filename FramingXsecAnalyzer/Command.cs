@@ -149,7 +149,7 @@ namespace FramingXsecAnalyzer
     #endregion // Obsolete attempts
 
     #region Using REX
-    #if USING_REX
+#if USING_REX
     /// <summary>
     /// Use REX to analyse element cross section.
     /// This requires a reference to 
@@ -160,25 +160,25 @@ namespace FramingXsecAnalyzer
     /// the assembly resolver OnAssemblyResolve.
     /// </summary>
     void RexXsecAnalyis(
-      ExternalCommandData commandData, 
+      ExternalCommandData commandData,
       Element e )
     {
       // Initialise converter
 
-      RVTFamilyConverter rvt = new RVTFamilyConverter( 
+      RVTFamilyConverter rvt = new RVTFamilyConverter(
         commandData, true );
 
       // Retrieve family type
 
-      REXFamilyType fam = rvt.GetFamily( e, 
+      REXFamilyType fam = rvt.GetFamily( e,
         ECategoryType.SECTION_PARAM );
-      
+
       // Retrieve section data
 
-      REXFamilyType_ParamSection paramSection = fam 
+      REXFamilyType_ParamSection paramSection = fam
         as REXFamilyType_ParamSection;
 
-      REXSectionParamDescription parameters 
+      REXSectionParamDescription parameters
         = paramSection.Parameters;
 
       // Extract dimensions, section type, tapered
@@ -196,7 +196,7 @@ namespace FramingXsecAnalyzer
 
       bool start = true;
 
-      Contour_Section contour = parameters.GetContour( 
+      Contour_Section contour = parameters.GetContour(
         start );
 
       List<ContourCont> shape = contour.Shape;
@@ -207,16 +207,16 @@ namespace FramingXsecAnalyzer
         + "{0}.", sectionType );
     }
 
-    static System.Reflection.Assembly OnAssemblyResolve( 
-      object sender, 
+    static System.Reflection.Assembly OnAssemblyResolve(
+      object sender,
       ResolveEventArgs args )
     {
       Assembly a = Assembly.GetExecutingAssembly();
- 
+
       return Autodesk.REX.Framework.REXAssemblies
         .Resolve( sender, args, "2014", a );
     }
-    #endif // Using REX
+#endif // Using REX
     #endregion // Using REX
 
     public Result Execute(
@@ -234,7 +234,7 @@ namespace FramingXsecAnalyzer
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
 
-      Document doc = Util.GetActiveDocument( 
+      Document doc = Util.GetActiveDocument(
         uidoc, false );
 
       if( null == doc )
@@ -290,7 +290,7 @@ namespace FramingXsecAnalyzer
       }
 
       #region Obsolete attempts
-      #if OBSOLETE_ATTEMPTS
+#if OBSOLETE_ATTEMPTS
       // Retrieve framing start and end points
 
       XYZ p, q;
@@ -303,7 +303,7 @@ namespace FramingXsecAnalyzer
 
         return Result.Failed;
       }
-      #endif // OBSOLETE_ATTEMPTS
+#endif // OBSOLETE_ATTEMPTS
       #endregion // Obsolete attempts
 
       // Set up section view
@@ -325,7 +325,7 @@ namespace FramingXsecAnalyzer
 
       View view = doc.ActiveView;
       opt.View = view;
-      
+
       //opt.View = viewSection;
 
       GeometryElement geo = e.get_Geometry( opt );
@@ -364,7 +364,7 @@ namespace FramingXsecAnalyzer
       }
 
       #region Obsolete attempts
-    #if OBSOLETE_ATTEMPTS
+#if OBSOLETE_ATTEMPTS
       // Set up extrusion analyser
 
       XYZ direction = q - p;
@@ -406,7 +406,7 @@ namespace FramingXsecAnalyzer
           view.SketchPlane.Plane.Origin ),
           "expected same view plane from sketch plane" );
       }
-    #endif // OBSOLETE_ATTEMPTS
+#endif // OBSOLETE_ATTEMPTS
       #endregion // Obsolete attempts
 
       // Select the first planar face which is 
@@ -421,9 +421,9 @@ namespace FramingXsecAnalyzer
 
       foreach( Face f in solid.Faces )
       {
-        if( f is PlanarFace 
-          && Util.IsParallel( viewDir, 
-            (f as PlanarFace).Normal ) )
+        if( f is PlanarFace
+          && Util.IsParallel( viewDir,
+            ( f as PlanarFace ).Normal ) )
         {
           crossSection = f as PlanarFace;
 
@@ -450,14 +450,14 @@ namespace FramingXsecAnalyzer
         n, Util.PluralSuffix( n ),
         ( 1 == n ? "open" : "closed" ) );
 
-      GeoSnoop.ShowCurve( "Solid face directly", 
+      GeoSnoop.ShowCurve( "Solid face directly",
         eaa, AnalyticalDirection.Y );
 
-      #if USING_REX
+#if USING_REX
 
       RexXsecAnalyis( commandData, e );
-      
-      #endif // Using REX
+
+#endif // Using REX
 
       return Result.Succeeded;
     }
