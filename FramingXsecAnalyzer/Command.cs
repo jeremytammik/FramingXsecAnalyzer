@@ -11,6 +11,8 @@ using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using RvtOperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
+using Application = Autodesk.Revit.ApplicationServices.Application;
+
 #if USING_REX
 using REX.ContentGenerator.Converters;
 using REX.ContentGenerator.Families;
@@ -153,7 +155,7 @@ namespace FramingXsecAnalyzer
     /// This requires a reference to 
     /// REX.ContentGeneratorLT.dll and prior
     /// initialisation of the REX framework.
-    /// The converter intialisation must reside in
+    /// The converter initialisation must reside in
     /// a different method than the subscription to
     /// the assembly resolver OnAssemblyResolve.
     /// </summary>
@@ -163,24 +165,40 @@ namespace FramingXsecAnalyzer
     {
       // Initialise converter
 
-      RVTFamilyConverter rvt = new RVTFamilyConverter( commandData, true );
+      RVTFamilyConverter rvt = new RVTFamilyConverter( 
+        commandData, true );
 
       // Retrieve family type
 
-      REXFamilyType fam = rvt.GetFamily( e, ECategoryType.SECTION_PARAM );
+      REXFamilyType fam = rvt.GetFamily( e, 
+        ECategoryType.SECTION_PARAM );
       
       // Retrieve section data
 
-      REXFamilyType_ParamSection paramSection = fam as REXFamilyType_ParamSection;
+      REXFamilyType_ParamSection paramSection = fam 
+        as REXFamilyType_ParamSection;
 
-      REXSectionParamDescription parameters = paramSection.Parameters; 
+      REXSectionParamDescription parameters 
+        = paramSection.Parameters;
 
-      REXSectionParamDimensions dimensions = parameters.Dimensions; // dimensions
-      ESectionType sectionType = parameters.SectionType; // section type
-      bool tapered = parameters.Tapered; // different start and end sections? if so, use DimensionsEnd as well
+      // Extract dimensions, section type, tapered
+      // predicate, etc.
+      // If different start and end sections are 
+      // required, use DimensionsEnd as well.
+
+      REXSectionParamDimensions dimensions = parameters
+        .Dimensions;
+
+      ESectionType sectionType = parameters
+        .SectionType;
+
+      bool tapered = parameters.Tapered;
 
       bool start = true;
-      Contour_Section contour = parameters.GetContour( start );
+
+      Contour_Section contour = parameters.GetContour( 
+        start );
+
       List<ContourCont> shape = contour.Shape;
 
       Debug.Print(
@@ -196,7 +214,7 @@ namespace FramingXsecAnalyzer
       Assembly a = Assembly.GetExecutingAssembly();
  
       return Autodesk.REX.Framework.REXAssemblies
-        .Resolve( sender, args, "2012", a );
+        .Resolve( sender, args, "2014", a );
     }
     #endif // Using REX
     #endregion // Using REX
@@ -206,6 +224,7 @@ namespace FramingXsecAnalyzer
       ref string message,
       ElementSet elements )
     {
+
 #if USING_REX
       AppDomain.CurrentDomain.AssemblyResolve
         += new ResolveEventHandler( OnAssemblyResolve );
@@ -213,8 +232,10 @@ namespace FramingXsecAnalyzer
 
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
-      Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-      Document doc = Util.GetActiveDocument( uidoc, false );
+      Application app = uiapp.Application;
+
+      Document doc = Util.GetActiveDocument( 
+        uidoc, false );
 
       if( null == doc )
       {
@@ -308,7 +329,6 @@ namespace FramingXsecAnalyzer
       //opt.View = viewSection;
 
       GeometryElement geo = e.get_Geometry( opt );
-      //GeometryObjectArray objects = geo.Objects;
       GeometryInstance inst = null;
 
       foreach( GeometryObject obj in geo )
@@ -332,8 +352,6 @@ namespace FramingXsecAnalyzer
       //geo = inst.SymbolGeometry;
       geo = inst.GetInstanceGeometry();
 
-      //objects = geo.Objects;
-      
       foreach( GeometryObject obj in geo )
       {
         solid = obj as Solid;
