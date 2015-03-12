@@ -214,7 +214,7 @@ namespace FramingXsecAnalyzer
       Assembly a = Assembly.GetExecutingAssembly();
 
       return Autodesk.REX.Framework.REXAssemblies
-        .Resolve( sender, args, "2014", a );
+        .Resolve( sender, args, "2015", a );
     }
 #endif // Using REX
     #endregion // Using REX
@@ -247,7 +247,12 @@ namespace FramingXsecAnalyzer
 
       Selection sel = uidoc.Selection;
 
-      int n = sel.Elements.Size;
+      //int n = sel.Elements.Size; // 2014
+
+      ICollection<ElementId> ids 
+        = uidoc.Selection.GetElementIds(); // 2015
+
+      int n = ids.Count;
 
       if( 1 < n )
       {
@@ -267,9 +272,9 @@ namespace FramingXsecAnalyzer
         Debug.Assert( 1 == n,
           "we already checked for 1 < n above" );
 
-        foreach( Element e2 in sel.Elements )
+        foreach( ElementId id in ids )
         {
-          e = e2;
+          e = doc.GetElement( id );
         }
       }
       else
