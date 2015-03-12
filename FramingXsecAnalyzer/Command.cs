@@ -22,7 +22,7 @@ using REX.ContentGenerator.Geometry;
 
 namespace FramingXsecAnalyzer
 {
-  [Transaction( TransactionMode.Manual )]
+  [Transaction( TransactionMode.ReadOnly )]
   public class Command : IExternalCommand
   {
     #region Obsolete attempts
@@ -201,10 +201,10 @@ namespace FramingXsecAnalyzer
 
       List<ContourCont> shape = contour.Shape;
 
-      Debug.Print(
+      Util.InfoMessage( string.Format(
         "The selected structural framing element "
         + "cross section REX section type is "
-        + "{0}.", sectionType );
+        + "{0}.", sectionType ) );
     }
 
     static System.Reflection.Assembly OnAssemblyResolve(
@@ -448,12 +448,12 @@ namespace FramingXsecAnalyzer
 
       n = eaa.Size;
 
-      Debug.Print(
+      Util.InfoMessage( string.Format(
         "The selected structural framing element "
         + "cross section section view cut plane "
         + "face has {0} loop{1} and is thus '{2}'.",
         n, Util.PluralSuffix( n ),
-        ( 1 == n ? "open" : "closed" ) );
+        ( 1 == n ? "open" : "closed" ) ) );
 
       GeoSnoop.ShowCurve( "Solid face directly",
         eaa, AnalyticalDirection.Y );
